@@ -37,17 +37,18 @@ namespace MusicPortal.BLL.Services
         }
         public async Task Update(UsersDTO userDto)
         {
-            var us = new Users()
-            {
-                Id = userDto.Id,
-                FirstName = userDto.FirstName,
-                LastName = userDto.LastName,
-                Login = userDto.Login,
-                Password = userDto.Password,
-                Salt = userDto.Salt,
-                IsСonfirm = userDto.IsСonfirm
-            };
-            Database.Users.Update(us);
+
+            var uss = await Database.Users.GetObject(userDto.Id);
+            
+            uss.Id = userDto.Id;
+            uss.FirstName = userDto.FirstName;
+            uss.LastName = userDto.LastName;
+            uss.Login = userDto.Login;
+            uss.Password = userDto.Password;
+            uss.Salt = userDto.Salt;
+            uss.IsСonfirm = userDto.IsСonfirm;
+          
+            Database.Users.Update(uss);
             await Database.Save();
         }
 
@@ -60,7 +61,7 @@ namespace MusicPortal.BLL.Services
         {
             var us = await Database.Users.GetObject(id);
             if (us == null)
-                throw new ValidationException("Нет такого жанра");
+                throw new ValidationException("Нет такого пользователя");
             return new UsersDTO
             {
                 Id = us.Id,

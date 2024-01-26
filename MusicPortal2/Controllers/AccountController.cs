@@ -31,7 +31,7 @@ namespace MusicPortal2.Controllers
             if (us != null)
             {
                 us.IsСonfirm = true;
-                _usersServices.Update(us);
+                await _usersServices.Update(us);
                 
                 return RedirectToAction(nameof(Users));
             }
