@@ -20,15 +20,19 @@ namespace MusicPortal2.Controllers
         }
         public async Task<IActionResult> CreateGenre()
         {
-            GenreView genreView = new GenreView();
-            foreach(var genre in _genreService.GetGenre().Result)
+            var list_genre_dto = await _genreService.GetGenre();
+            List<Genre> genreList = new List<Genre>();
+            foreach(var it in list_genre_dto)
             {
-                Genre genre1 = new Genre();
-                genre1.Genre_name = genre.Genre_name;
-                genre1.Id = genre.Id;
-                genreView.GenreList.Append(genre1);
+                genreList.Add(new Genre
+                {
+                    Id = it.Id,
+                    Genre_name = it.Genre_name
+                });
             }
-            
+            GenreView genreView = new GenreView();
+            genreView.GenreList = genreList;
+           
             return View(genreView);
         }
 
