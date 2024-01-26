@@ -33,12 +33,12 @@ namespace MusicPortal.BLL.Services
         }
         public async Task Update(GenreDTO genreDto)
         {
-            var genre = new Genre()
-            {
-                Id = genreDto.Id,
-                Genre_name = genreDto.Genre_name
-            };
-            Database.Genre.Update(genre);
+            var gen = await Database.Genre.GetObject(genreDto.Id);
+
+            gen.Id = genreDto.Id;
+                gen.Genre_name = genreDto.Genre_name;
+            
+            Database.Genre.Update(gen);
             await Database.Save();
         }
 
