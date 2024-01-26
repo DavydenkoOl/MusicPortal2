@@ -74,7 +74,7 @@ namespace MusicPortal.BLL.Services
         }
         public async Task<IEnumerable<UsersDTO>> GetUser()
         {
-            var config = new MapperConfiguration(tmp => tmp.CreateMap<Genre, GenreDTO>());
+            var config = new MapperConfiguration(tmp => tmp.CreateMap<Users, UsersDTO>());
             var mapper = new Mapper(config);
             return mapper.Map<IEnumerable<Users>, IEnumerable<UsersDTO>>(await Database.Users.GetList());
         }

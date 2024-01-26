@@ -47,7 +47,9 @@ namespace MusicPortal2.Controllers
 
         {
             Response.Cookies.Delete("Login");
-            HttpContext.Session.Clear();
+            Response.Cookies.Delete("FirstName");
+            Response.Cookies.Delete("LastName");
+            //HttpContext.Session.Clear();
             return RedirectToAction("Login");
         }
 
@@ -61,11 +63,11 @@ namespace MusicPortal2.Controllers
                 CookieOptions option = new CookieOptions();
                 option.Expires = DateTime.Now.AddDays(30);
                 
-                if ( _usersServices.GetUser().Result.Count() == 0)
-                {
-                    ModelState.AddModelError("", "Wrong login or password!");
-                    return View(logon);
-                }
+                //if ( _usersServices.GetUser().Result.Count() == 0)
+                //{
+                //    ModelState.AddModelError("", "Wrong login or password!");
+                //    return View(logon);
+                //}
                 var users =  _usersServices.GetUser().Result.Where(a => a.Login == logon.Login).FirstOrDefault();
                 if (users == null)
                 {
@@ -97,10 +99,10 @@ namespace MusicPortal2.Controllers
                     ModelState.AddModelError("", "Wrong login or password!");
                     return View(logon);
                 }
-                HttpContext.Session.SetString("UserID", users.Id.ToString());
-                HttpContext.Session.SetString("FirstName", users.FirstName);
-                HttpContext.Session.SetString("LastName", users.LastName);
-                HttpContext.Session.SetString("Login", users.Login);
+                //HttpContext.Session.SetString("UserID", users.Id.ToString());
+                //HttpContext.Session.SetString("FirstName", users.FirstName);
+                //HttpContext.Session.SetString("LastName", users.LastName);
+                //HttpContext.Session.SetString("Login", users.Login);
 
                 Response.Cookies.Append("UserID", users.Id.ToString(), option);
                 Response.Cookies.Append("FirstName", users.FirstName, option);
@@ -121,7 +123,7 @@ namespace MusicPortal2.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Register(RegistratModel reg)
+        public async Task< IActionResult> Register(RegistratModel reg)
         {
             if (ModelState.IsValid)
             {
@@ -156,7 +158,7 @@ namespace MusicPortal2.Controllers
 
                 user.Password = hash.ToString();
                 user.Salt = salt;
-                _usersServices.Create(user);
+               await _usersServices.Create(user);
                
                 return RedirectToAction("Login");
             }
